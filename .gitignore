@@ -3,6 +3,9 @@ venv/
 __pycache__/
 test.db
 
+mypython/
+token.txt
+
 # OS generated files #
 ######################
 .DS_Store

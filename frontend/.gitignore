@@ -20,19 +20,14 @@ npm-debug.log*
 .versions/
 coverage/
 www/
-frontend/node_modules/
 node_modules/
 tmp/
 temp/
-mypython/
 platforms/
 plugins/
 plugins/android.json
 plugins/ios.json
-__pycache__/
 $RECYCLE.BIN/
-
-
 
 .DS_Store
 Thumbs.db
