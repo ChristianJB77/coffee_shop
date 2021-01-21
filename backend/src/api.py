@@ -17,23 +17,25 @@ CORS(app)
 def check(jwt):
     print(jwt)
     return 'YES, Access granted'
+"""Delete ABOVE AFTER TESTING"""
 
-'''
-@TODO uncomment the following line to initialize the datbase
-!! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
-!! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
-'''
-# db_drop_and_create_all()
+db_drop_and_create_all()
 
 ## ROUTES
-'''
-@TODO implement endpoint
-    GET /drinks
-        it should be a public endpoint
-        it should contain only the drink.short() data representation
-    returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
-        or appropriate status code indicating reason for failure
-'''
+@app.route('/drinks')
+# Public no requires_auth
+def get_drinks():
+    res = Drink.query.all()
+    drinks = [d.short() for d in res]
+    if len(drinks) == 0:
+        abort(404)
+
+    print(drinks)
+    return jsonify({
+        "sucess": True,
+        "drinks": drinks
+    })
+
 
 
 '''
