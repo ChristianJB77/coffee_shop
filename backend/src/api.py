@@ -5,7 +5,7 @@ import json
 from flask_cors import CORS
 
 from .database.models import db_drop_and_create_all, setup_db, Drink
-from .auth.auth import AuthError, requires_auth, get_token_auth_header
+from .auth.auth import AuthError, requires_auth
 
 app = Flask(__name__)
 setup_db(app)
@@ -13,10 +13,10 @@ CORS(app)
 
 """Code check --> Delete after auth-py is DONE"""
 @app.route('/check')
-def check():
-    jwt = get_token_auth_header()
+@requires_auth('get:drinks-detail')
+def check(jwt):
     print(jwt)
-    return 'Auth check'
+    return 'YES, Access granted'
 
 '''
 @TODO uncomment the following line to initialize the datbase
