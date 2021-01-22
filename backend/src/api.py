@@ -19,7 +19,8 @@ def check(jwt):
     return 'YES, Access granted'
 """Delete ABOVE AFTER TESTING"""
 
-db_drop_and_create_all()
+"""Uncomment for re-initalizing database, watch out: Will delete entire db"""
+#db_drop_and_create_all()
 
 ## ROUTES
 """GET Public drinks overview"""
@@ -27,11 +28,12 @@ db_drop_and_create_all()
 # Public no requires_auth
 def get_drinks():
     res = Drink.query.all()
-    drinks = [d.short() for d in res]
-    if len(drinks) == 0:
+    # Abort if drinks list is empty
+    if len(res) == 0:
         abort(404)
+    # Format output for frontend
+    drinks = [d.short() for d in res]
 
-    print(drinks)
     return jsonify({
         "sucess": True,
         "drinks": drinks
@@ -43,26 +45,54 @@ def get_drinks():
 @requires_auth('get:drinks-detail')
 def get_drinks_details(jwt):
     res = Drink.query.all()
-    drinks = [d.long() for d in res]
-    if len(drinks) == 0:
+    # Abort if drinks list is empty
+    if len(res) == 0:
         abort(404)
-
-    print(drinks)
+    # Format output for frontend
+    drinks = [d.long() for d in res]
 
     return jsonify({
         "success": True,
         "drinks": drinks
     })
 
-'''
-@TODO implement endpoint
-    POST /drinks
-        it should create a new row in the drinks table
-        it should require the 'post:drinks' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
-        or appropriate status code indicating reason for failure
-'''
+
+"""POST add new drinks with details"""
+@app.route('/drinks', methods=["POST"])
+@requires_auth('post:drinks')
+def post_new_drinks(jwt):
+    # Get HTML json body response
+    body = request.get_json()
+    # New drink with details
+    new_title = body.get('title', None)
+    new_recipe = body.get('recipe', None)
+
+    #Check if title is unique
+    unique_check = Drink.query.filter(Drink.title == new_title).one_or_none()
+    print(unique_check)
+    if unique_check != None:
+        print('Title is already existing!')
+        abort(409)
+
+    #Title is unique -> Add to database 
+    else:
+        new_drink = Drink(
+            title = new_title,
+            recipe = json.dumps(new_recipe)
+        )
+        new_drink.insert()
+
+        # Return ONLY new drink
+        res = Drink.query.filter(Drink.title == new_title)
+        drink = [d.long() for d in res]
+        # Check if successfully added to database
+        if len(drink) == 0:
+            abort(404)
+
+        return jsonify({
+            "success": True,
+            "drinks": drink
+        })
 
 
 '''
