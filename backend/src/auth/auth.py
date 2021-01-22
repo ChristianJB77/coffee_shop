@@ -54,7 +54,7 @@ def check_permissions(permission, payload):
         raise AuthError({
             'code': 'invalid_claims',
             'description': 'Permission NOT included in JWT!'
-        }, 400)
+        }, abort(400))
     #If permission is empty, then no user is not authorized
     if permission not in payload['permissions']:
         raise AuthError({

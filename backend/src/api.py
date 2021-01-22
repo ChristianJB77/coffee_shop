@@ -11,14 +11,6 @@ app = Flask(__name__)
 setup_db(app)
 CORS(app)
 
-"""Code check --> Delete after auth-py is DONE"""
-@app.route('/check')
-@requires_auth('get:drinks-detail')
-def check(jwt):
-    print('#### JWT:', jwt)
-    return 'YES, Access granted'
-"""Delete ABOVE AFTER TESTING"""
-
 """Uncomment for re-initalizing database, watch out: Will delete entire db"""
 #db_drop_and_create_all()
 
@@ -74,7 +66,7 @@ def post_new_drinks(jwt):
         print('Title is already existing!')
         abort(409)
 
-    #Title is unique -> Add to database 
+    #Title is unique -> Add to database
     else:
         new_drink = Drink(
             title = new_title,
@@ -95,18 +87,39 @@ def post_new_drinks(jwt):
         })
 
 
-'''
-@TODO implement endpoint
-    PATCH /drinks/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should update the corresponding row for <id>
-        it should require the 'patch:drinks' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
-        or appropriate status code indicating reason for failure
-'''
+"""PATCH edit drinks"""
+@app.route('/drinks/<int:id>', methods=['PATCH'])
+@requires_auth('patch:drinks')
+def edit_drinks(jwt, id):
+    # Get HTML json body response
+    body = request.get_json()
 
+    try:
+        drink = Drink.query.filter(Drink.id == id).one_or_none()
+        # Check if drink to be edited is existing in database
+        if drink is None:
+            abort(404)
+
+        # Edit drink
+        drink.title = body.get('title', None)
+        drink.recipe = json.dumps(body.get('recipe', None))
+        #drink.recipe = body.get('recipe', None)
+        drink.update()
+
+        # Return ONLY edited drink
+        res = Drink.query.filter(Drink.id == id)
+        edited_drink = [d.long() for d in res]
+        # Check if successfully added to database
+        if len(edited_drink) == 0:
+            abort(404)
+
+        return jsonify({
+            "success": True,
+            "drinks": edited_drink
+        })
+
+    except:
+        abort(400)
 
 '''
 @TODO implement endpoint
