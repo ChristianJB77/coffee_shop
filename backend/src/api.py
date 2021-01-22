@@ -15,13 +15,14 @@ CORS(app)
 @app.route('/check')
 @requires_auth('get:drinks-detail')
 def check(jwt):
-    print(jwt)
+    print('#### JWT:', jwt)
     return 'YES, Access granted'
 """Delete ABOVE AFTER TESTING"""
 
 db_drop_and_create_all()
 
 ## ROUTES
+"""GET Public drinks overview"""
 @app.route('/drinks')
 # Public no requires_auth
 def get_drinks():
@@ -37,16 +38,21 @@ def get_drinks():
     })
 
 
+"""GET Drinks details, permission required"""
+@app.route('/drinks-detail')
+@requires_auth('get:drinks-detail')
+def get_drinks_details(jwt):
+    res = Drink.query.all()
+    drinks = [d.long() for d in res]
+    if len(drinks) == 0:
+        abort(404)
 
-'''
-@TODO implement endpoint
-    GET /drinks-detail
-        it should require the 'get:drinks-detail' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
-        or appropriate status code indicating reason for failure
-'''
+    print(drinks)
 
+    return jsonify({
+        "success": True,
+        "drinks": drinks
+    })
 
 '''
 @TODO implement endpoint
