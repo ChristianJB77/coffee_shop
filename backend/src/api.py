@@ -195,7 +195,7 @@ def unprocessable(error):
     }), 500
 
 
-'''
-@TODO implement error handler for AuthError
-    error handler should conform to general task above
-'''
+"""Calls AuthError class"""
+@app.errorhandler(AuthError)
+def auth_error(error):
+    return jsonify(error.error), error.status_code

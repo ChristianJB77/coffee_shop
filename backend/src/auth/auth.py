@@ -29,20 +29,20 @@ def get_token_auth_header():
         raise AuthError({
         'code': 'authorization_header_missing',
         'description': 'Authorization header is MISSING!'
-        }, abort(401))
+        }, 401)
     #If bearer token, then first part of string = 'bearer'
     parts = auth.split()
     if parts[0].lower() != 'bearer':
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Authorization header (JWT token) must start with "Bearer"'
-        }, abort(401))
+        }, 401)
     #Authorization header string length must be 2
     elif len(parts) != 2:
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Authorization header must be a BEARER token'
-        }, abort(401))
+        }, 401)
 
     token = parts[1]
     return token
@@ -54,13 +54,13 @@ def check_permissions(permission, payload):
         raise AuthError({
             'code': 'invalid_claims',
             'description': 'Permission NOT included in JWT!'
-        }, abort(400))
+        }, 400)
     #If permission is empty, then no user is not authorized
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'unauthorized',
             'description': 'Forbidden access (permission NOT found)'
-        }, abort(403))
+        }, 403)
 
 '''
     !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
@@ -76,7 +76,7 @@ def verify_decode_jwt(token):
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Authorization NOT correctly formatted!'
-        }, abort(401))
+        }, 401)
 
     # Get RSA Key
     rsa_key = {}
@@ -105,22 +105,22 @@ def verify_decode_jwt(token):
             raise AuthError({
                 'code': 'token_expired',
                 'description': 'Token expired!'
-            }, abort(401))
+            }, 401)
 
         except jwt.JWTClaimsError:
             raise AuthError({
                 'code': 'invalid_claims',
                 'description': 'Incorrect claims. Please, check the audience and issuer!'
-            }, abort(401))
+            }, 401)
         except Exception:
             raise AuthError({
                 'code': 'invalid_header',
                 'description': 'Unable to parse authentication token!'
-            }, abort(400))
+            }, 400)
     raise AuthError({
             'code': 'invalid_header',
             'description': 'Unable to find the appropriate key!'
-        }, abort(400))
+        }, 400)
 
 
 def requires_auth(permission=''):
