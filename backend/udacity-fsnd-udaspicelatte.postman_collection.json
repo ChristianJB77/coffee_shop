@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "97f55406-7e6f-4e6a-8dae-d54021f49da0",
+		"_postman_id": "9028b716-daef-4911-a3a1-94098ec4d891",
 		"name": "udacity-fsnd-udaspicelatte",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -265,8 +265,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 401\", function () {",
-									"    pm.response.to.have.status(401);",
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -274,16 +274,6 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik4wTkNOVEEzTWpaQ1FUa3lRMEl6TmtORk0wWXhRVFUwT1RFMFFVVkNSRUpDT1RBME1EUXpOUSJ9.eyJpc3MiOiJodHRwczovL3VkYWNpdHktZnNuZC5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDY3MTQ4MTQ0MTcwNjk3MTI4OTMiLCJhdWQiOlsiZGV2IiwiaHR0cHM6Ly91ZGFjaXR5LWZzbmQuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTU2MDg5MDE2MCwiZXhwIjoxNTYwODk3MzYwLCJhenAiOiJPSjVwQk9ZSURFa09FVFVmUWo1ajdsSDZFTFcwMkd1MCIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6ZHJpbmtzIiwiZ2V0OmRyaW5rcy1kZXRhaWwiXX0.j9ocW47_exQOkEa10ffh8eijGvrIMxnGRzCmbrXnfaN_8ULsgA7AnWYMtvP8RmPWvT9n8sReWnFuJajUHBUbnBO2GuJ4aM3-WDUBeJT0X_mpGUWs4lxaNTbIkWdiWPTsEiRnP3wT-dU_v3Olw2PB4UMajMIjSH-IdF2Y1CiJIOaM0gV44RGZRyRvj6C2_mOkMfoXxzw-HrVvTRCo1NcUPea5Bs04POni7azx-B7FstP_HLm0dEbbge4XbmovHwlIXknIoI8PbuGXeLBqE2hv8fErKFBuIykxzK0nErH5zSPCrkM-_9smb8TLGAH-E5j1KQb6SHDKtcV_QHnsUYFuXA",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"url": {
@@ -305,8 +295,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 401\", function () {",
-									"    pm.response.to.have.status(401);",
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -336,8 +326,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 401\", function () {",
-									"    pm.response.to.have.status(401);",
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -492,7 +482,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Water3\",\n    \"recipe\": {\n        \"name\": \"Water\",\n        \"color\": \"blue\",\n        \"parts\": 1\n    }\n}"
+							"raw": "{\n    \"title\": \"Water3\",\n    \"recipe\": [{\n        \"name\": \"Water\",\n        \"color\": \"blue\",\n        \"parts\": 1\n    }]\n}"
 						},
 						"url": {
 							"raw": "{{host}}/drinks",
@@ -507,7 +497,7 @@
 					"response": []
 				},
 				{
-					"name": "/drinks/1",
+					"name": "/drinks/3",
 					"event": [
 						{
 							"listen": "test",
@@ -532,8 +522,8 @@
 							{
 								"key": "Content-Type",
 								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -541,20 +531,20 @@
 							"raw": "{\n    \"title\": \"Water5\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/drinks/1",
+							"raw": "{{host}}/drinks/3",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"drinks",
-								"1"
+								"3"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "/drinks/1",
+					"name": "/drinks/3",
 					"event": [
 						{
 							"listen": "test",
@@ -572,13 +562,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/drinks/1",
+							"raw": "{{host}}/drinks/3",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"drinks",
-								"1"
+								"3"
 							]
 						}
 					},
@@ -615,45 +605,6 @@
 					}
 				}
 			]
-		},
-		{
-			"name": "checker",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkVWZnJLazBka2VmcGhRQ3o5dGhCMCJ9.eyJpc3MiOiJodHRwczovL2Nqb2hhbm5iLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZmY4YzAxZjQ3NTNkNDAwNzU4ZjRmMDciLCJhdWQiOiJjb2ZmZWVfc2hvcCIsImlhdCI6MTYxMTI1NjA1OCwiZXhwIjoxNjExMzQyNDU4LCJhenAiOiJ6NmdHWTVkU1lucGZ5MnA5QmN1aXN5WXR5TGI4dHNOTyIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmRyaW5rcyIsImdldDpkcmlua3MtZGV0YWlsIiwicGF0Y2g6ZHJpbmtzIiwicG9zdDpkcmlua3MiXX0.S34qngUqmhj7jJkujVABdCQlBTA-2Z1EF6Q5BdszJY7dg2TvnLwxh6KiZ3-dWKUrhIzv0d3EWDkMXW-PJJ5FpWeOD8G24607CIAK9cvtLmbADvfDU8Ev1ttecQeSFBq2f9IRRL0tvHi9gp-ZUlP9e_eqLA3VURdXEacV6xNnq-4PWt3N6vlc7yR0ewJnn3oIPzjd-Ua9OR12yB__9XIeLaMLiRwCpArUEC8tA8PqK5qwY_53A_whC1yYsBFSDETNj5G6RXwA0i_XIsdRaMT-T-lYpy_dwivU3WzcMBKNSHhUT93AENhmt5TwZVgx9ykcbo4IMKWWO8ZDGQgwPI9FEQ",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkVWZnJLazBka2VmcGhRQ3o5dGhCMCJ9.eyJpc3MiOiJodHRwczovL2Nqb2hhbm5iLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZmY4YzAxZjQ3NTNkNDAwNzU4ZjRmMDciLCJhdWQiOiJjb2ZmZWVfc2hvcCIsImlhdCI6MTYxMDkyMTgzMCwiZXhwIjoxNjEwOTI5MDMwLCJhenAiOiJ6NmdHWTVkU1lucGZ5MnA5QmN1aXN5WXR5TGI4dHNOTyIsInNjb3BlIjoiIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmRyaW5rcyIsImdldDpkcmlua3MtZGV0YWlsIiwicGF0Y2g6ZHJpbmtzIiwicG9zdDpkcmlua3MiXX0.sYW0t4llKC4d8gvSW3Q8pj_LIItWze9WByi1EAd9ngcUloIiN0pbMBptUTyP7WwA_TB6HCJPyvksGux95WS2sE-YW2yJ4nUDbxeEq-zkQV5p1-O1R1IO708A66wfbHgcnj7XFDD0CrnbAb66Dn8bv3ssmaMiYv5jl0KpBL1xshzsreMn7NMmCT1jWHnK-Lxyjw56hh5Yb0T31QNmd8QY9mCOT4Lhfc5uHU0RpWlLeKjKEC1Fvjrenf8y6I0qulcn_r_YbhI-VhdGsFHX6qIG_nBOKjMPE_Nz-YIxqVU6XSbnEurZCvLLBx4fTTPwR4HI3P_tc_sNwvKunc4SUYALrg",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"url": {
-					"raw": "http://127.0.0.1:5000/check",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "5000",
-					"path": [
-						"check"
-					]
-				}
-			},
-			"response": []
 		}
 	],
 	"event": [

@@ -12,7 +12,7 @@ setup_db(app)
 CORS(app)
 
 """Uncomment for re-initalizing database, watch out: Will delete entire db"""
-#db_drop_and_create_all()
+# db_drop_and_create_all()
 
 ## ROUTES
 """GET Public drinks overview"""
@@ -49,7 +49,7 @@ def get_drinks_details(jwt):
     })
 
 
-"""POST add new drinks with details"""
+"""POST add new drinks with details, permission required"""
 @app.route('/drinks', methods=["POST"])
 @requires_auth('post:drinks')
 def post_new_drinks(jwt):
@@ -87,18 +87,15 @@ def post_new_drinks(jwt):
         })
 
 
-"""PATCH edit drinks"""
+"""PATCH edit drinks, permission required"""
 @app.route('/drinks/<int:id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def edit_drinks(jwt, id):
     # Get HTML json body response
     body = request.get_json()
-
+    drink = 1
     try:
         drink = Drink.query.filter(Drink.id == id).one_or_none()
-        # Check if drink to be edited is existing in database
-        if drink is None:
-            abort(404)
 
         # Edit drink
         drink.title = body.get('title', None)
@@ -119,18 +116,33 @@ def edit_drinks(jwt, id):
         })
 
     except:
-        abort(400)
+        # Check if drink to be edited is existing in database
+        if drink is None:
+            abort(404)
+        else:
+            abort(405)
 
-'''
-@TODO implement endpoint
-    DELETE /drinks/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should delete the corresponding row for <id>
-        it should require the 'delete:drinks' permission
-    returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
-        or appropriate status code indicating reason for failure
-'''
+
+"""Delete drinks, permission required"""
+@app.route('/drinks/<int:id>', methods=['DELETE'])
+@requires_auth('delete:drinks')
+def delete_drinks(jwt, id):
+    drink = 1
+    try:
+        drink = Drink.query.filter(Drink.id == id).one_or_none()
+        drink.delete()
+
+        return jsonify({
+            "success": True,
+            "delete": id
+        })
+
+    except:
+        # Check if drink to be edited is existing in database
+        if drink is None:
+            abort(404)
+        else:
+            abort(405)
 
 
 ## Error Handling
