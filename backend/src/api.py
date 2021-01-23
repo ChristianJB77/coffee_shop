@@ -61,7 +61,6 @@ def post_new_drinks(jwt):
 
     #Check if title is unique
     unique_check = Drink.query.filter(Drink.title == new_title).one_or_none()
-    print(unique_check)
     if unique_check != None:
         print('Title is already existing!')
         abort(409)
@@ -146,32 +145,54 @@ def delete_drinks(jwt, id):
 
 
 ## Error Handling
-'''
-Example error handling for unprocessable entity
-'''
+"""Error handler"""
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify({
+        "success": False,
+        "error": 400,
+        "message": "Bad request"
+    }), 400
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error": 404,
+        "message": "Resource NOT found"
+    }), 404
+
+@app.errorhandler(405)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error": 405,
+        "message": "Method NOT allowed"
+    }), 405
+
+@app.errorhandler(409)
+def conflict(error):
+    return jsonify({
+        "success": False,
+        "error": 409,
+        "message": "Conflict, DUPLICATE in database found"
+    }), 409
+
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False,
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+        "success": False,
+        "error": 422,
+        "message": "Unprocessable"
+    }), 422
 
-'''
-@TODO implement error handlers using the @app.errorhandler(error) decorator
-    each error handler should return (with approprate messages):
-             jsonify({
-                    "success": False,
-                    "error": 404,
-                    "message": "resource not found"
-                    }), 404
-
-'''
-
-'''
-@TODO implement error handler for 404
-    error handler should conform to general task above
-'''
+@app.errorhandler(500)
+def unprocessable(error):
+    return jsonify({
+        "success": False,
+        "error": 500,
+        "message": "Internal database error"
+    }), 500
 
 
 '''
