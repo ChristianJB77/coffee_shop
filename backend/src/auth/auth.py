@@ -8,36 +8,38 @@ AUTH0_DOMAIN = 'cjohannb.eu.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'coffee_shop'
 
-## AuthError Exception
+# AuthError Exception
 '''
 AuthError Exception
 A standardized way to communicate auth failure modes
 '''
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
 
-## Auth Header
+# Auth Header
 def get_token_auth_header():
     """Gets access bearer token from authorization header"""
-    #Get authorization form request header
+    # Get authorization form request header
     auth = request.headers.get('Authorization', None)
-    #Check if authorization header exists
+    # Check if authorization header exists
     if not auth:
         raise AuthError({
-        'code': 'authorization_header_missing',
-        'description': 'Authorization header is MISSING!'
+            'code': 'authorization_header_missing',
+            'description': 'Authorization header is MISSING!'
         }, 401)
-    #If bearer token, then first part of string = 'bearer'
+    # If bearer token, then first part of string = 'bearer'
     parts = auth.split()
     if parts[0].lower() != 'bearer':
         raise AuthError({
             'code': 'invalid_header',
-            'description': 'Authorization header (JWT token) must start with "Bearer"'
+            'description': 'Authorization header must start with "Bearer"'
         }, 401)
-    #Authorization header string length must be 2
+    # Authorization header string length must be 2
     elif len(parts) != 2:
         raise AuthError({
             'code': 'invalid_header',
@@ -55,16 +57,14 @@ def check_permissions(permission, payload):
             'code': 'invalid_claims',
             'description': 'Permission NOT included in JWT!'
         }, 400)
-    #If permission is empty, then no user is not authorized
+    # If permission is empty, then no user is not authorized
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'unauthorized',
             'description': 'Forbidden access (permission NOT found)'
         }, 403)
 
-'''
-    !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
-'''
+
 def verify_decode_jwt(token):
     # Get Json Web Key Set -> Public key of asymmetric signature
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
@@ -110,7 +110,7 @@ def verify_decode_jwt(token):
         except jwt.JWTClaimsError:
             raise AuthError({
                 'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the audience and issuer!'
+                'description': 'Incorrect claims, check the audience & issuer!'
             }, 401)
         except Exception:
             raise AuthError({
@@ -118,9 +118,9 @@ def verify_decode_jwt(token):
                 'description': 'Unable to parse authentication token!'
             }, 400)
     raise AuthError({
-            'code': 'invalid_header',
-            'description': 'Unable to find the appropriate key!'
-        }, 400)
+        'code': 'invalid_header',
+        'description': 'Unable to find the appropriate key!'
+    }, 400)
 
 
 def requires_auth(permission=''):
@@ -130,7 +130,7 @@ def requires_auth(permission=''):
             token = get_token_auth_header()
             try:
                 payload = verify_decode_jwt(token)
-            except:
+            except Error:
                 abort(401)
 
             check_permissions(permission, payload)

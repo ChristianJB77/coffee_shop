@@ -14,8 +14,10 @@ CORS(app)
 """Uncomment for re-initalizing database, watch out: Will delete entire db"""
 # db_drop_and_create_all()
 
-## ROUTES
+# ROUTES
 """GET Public drinks overview"""
+
+
 @app.route('/drinks')
 # Public no requires_auth
 def get_drinks():
@@ -33,6 +35,8 @@ def get_drinks():
 
 
 """GET Drinks details, permission required"""
+
+
 @app.route('/drinks-detail')
 @requires_auth('get:drinks-detail')
 def get_drinks_details(jwt):
@@ -50,6 +54,8 @@ def get_drinks_details(jwt):
 
 
 """POST add new drinks with details, permission required"""
+
+
 @app.route('/drinks', methods=["POST"])
 @requires_auth('post:drinks')
 def post_new_drinks(jwt):
@@ -59,17 +65,17 @@ def post_new_drinks(jwt):
     new_title = body.get('title', None)
     new_recipe = body.get('recipe', None)
 
-    #Check if title is unique
+    # Check if title is unique
     unique_check = Drink.query.filter(Drink.title == new_title).one_or_none()
-    if unique_check != None:
+    if unique_check is not None:
         print('Title is already existing!')
         abort(409)
 
-    #Title is unique -> Add to database
+    # Title is unique -> Add to database
     else:
         new_drink = Drink(
-            title = new_title,
-            recipe = json.dumps(new_recipe)
+            title=new_title,
+            recipe=json.dumps(new_recipe)
         )
         new_drink.insert()
 
@@ -87,6 +93,8 @@ def post_new_drinks(jwt):
 
 
 """PATCH edit drinks, permission required"""
+
+
 @app.route('/drinks/<int:id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def edit_drinks(jwt, id):
@@ -99,7 +107,7 @@ def edit_drinks(jwt, id):
         # Edit drink
         drink.title = body.get('title', None)
         drink.recipe = json.dumps(body.get('recipe', None))
-        #drink.recipe = body.get('recipe', None)
+        # drink.recipe = body.get('recipe', None)
         drink.update()
 
         # Return ONLY edited drink
@@ -114,7 +122,7 @@ def edit_drinks(jwt, id):
             "drinks": edited_drink
         })
 
-    except:
+    except Error:
         # Check if drink to be edited is existing in database
         if drink is None:
             abort(404)
@@ -123,6 +131,8 @@ def edit_drinks(jwt, id):
 
 
 """Delete drinks, permission required"""
+
+
 @app.route('/drinks/<int:id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 def delete_drinks(jwt, id):
@@ -136,7 +146,7 @@ def delete_drinks(jwt, id):
             "delete": id
         })
 
-    except:
+    except Error:
         # Check if drink to be edited is existing in database
         if drink is None:
             abort(404)
@@ -144,8 +154,10 @@ def delete_drinks(jwt, id):
             abort(405)
 
 
-## Error Handling
+# Error Handling
 """Error handler"""
+
+
 @app.errorhandler(400)
 def bad_request(error):
     return jsonify({
@@ -153,6 +165,7 @@ def bad_request(error):
         "error": 400,
         "message": "Bad request"
     }), 400
+
 
 @app.errorhandler(404)
 def not_found(error):
@@ -162,6 +175,7 @@ def not_found(error):
         "message": "Resource NOT found"
     }), 404
 
+
 @app.errorhandler(405)
 def not_found(error):
     return jsonify({
@@ -169,6 +183,7 @@ def not_found(error):
         "error": 405,
         "message": "Method NOT allowed"
     }), 405
+
 
 @app.errorhandler(409)
 def conflict(error):
@@ -178,6 +193,7 @@ def conflict(error):
         "message": "Conflict, DUPLICATE in database found"
     }), 409
 
+
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
@@ -185,6 +201,7 @@ def unprocessable(error):
         "error": 422,
         "message": "Unprocessable"
     }), 422
+
 
 @app.errorhandler(500)
 def unprocessable(error):
@@ -196,6 +213,8 @@ def unprocessable(error):
 
 
 """Calls AuthError class"""
+
+
 @app.errorhandler(AuthError)
 def auth_error(error):
     return jsonify(error.error), error.status_code
